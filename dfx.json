@@ -1,0 +1,39 @@
+{
+  "canisters": {
+    "motoko_to_rust_migration_backend": {
+      "main": "src/motoko_to_rust_migration_backend/main.mo",
+      "type": "motoko"
+    },
+    "motoko_data": {
+      "main": "src/motoko_data/data.mo",
+      "type": "motoko"
+    },
+    "motoko_to_rust_migration_frontend": {
+      "dependencies": [
+        "motoko_to_rust_migration_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/motoko_to_rust_migration_frontend/src/index.html"
+      },
+      "source": [
+        "src/motoko_to_rust_migration_frontend/assets",
+        "dist/motoko_to_rust_migration_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "dfx": "0.11.2",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    }
+  },
+  "version": 1
+}
