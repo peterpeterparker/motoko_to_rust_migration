@@ -1,7 +1,8 @@
 import {motoko_to_rust_migration_backend} from "../../declarations/motoko_to_rust_migration_backend";
 import {createActor} from "../../declarations/motoko_data";
+import {Principal} from "@dfinity/principal";
 
-let canisterId;
+let canisterId = Principal.fromText("renrk-eyaaa-aaaaa-aaada-cai");
 
 const initCanister = async () => {
   try {
