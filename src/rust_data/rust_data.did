@@ -5,6 +5,12 @@ type State =
     };
 
 type Assets =
+    vec record {
+        text;
+        Asset;
+    };
+
+type Asset =
     record {
         key: text;
         value: vec nat8;

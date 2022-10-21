@@ -1,5 +1,5 @@
 import {motoko_to_rust_migration_backend} from "../../declarations/motoko_to_rust_migration_backend";
-import {createActor} from "../../declarations/motoko_data";
+import {createActor} from "../../declarations/rust_data";
 import {Principal} from "@dfinity/principal";
 
 let storageCanisterId = localStorage.getItem('canister_id');
