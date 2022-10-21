@@ -8,6 +8,11 @@
       "main": "src/motoko_data/data.mo",
       "type": "motoko"
     },
+    "rust_data": {
+      "type": "rust",
+      "package": "rust_data",
+      "candid": "src/rust_data/rust_data.did"
+    },
     "motoko_to_rust_migration_frontend": {
       "dependencies": [
         "motoko_to_rust_migration_backend"

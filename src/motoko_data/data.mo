@@ -2,6 +2,7 @@
 import Iter "mo:base/Iter";
 import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
+import Blob "mo:base/Blob";
 
 actor class DataBucket(owner: {user: Text}) = this {
 
@@ -9,7 +10,7 @@ actor class DataBucket(owner: {user: Text}) = this {
 
     private type Asset = {
         key : Text;
-        value: Blob;
+        value: [Nat8];
     };
 
     private stable var entries : [(Text, Asset)] = [];
@@ -23,7 +24,7 @@ actor class DataBucket(owner: {user: Text}) = this {
     public func put(key: Text, value : Text) : async () {
         assets.put(key, {
             key = value;
-            value = Text.encodeUtf8(value);
+            value = Blob.toArray(Text.encodeUtf8(value));
         });
     };
 

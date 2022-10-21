@@ -1,0 +1,15 @@
+type State =
+    record {
+        owner: text;
+        assets: Assets;
+    };
+
+type Assets =
+    record {
+        key: text;
+        value: vec nat8;
+    };
+
+service : {
+    "get": () -> (State) query;
+}
