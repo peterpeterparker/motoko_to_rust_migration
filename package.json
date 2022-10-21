@@ -9,6 +9,7 @@
     "Canister"
   ],
   "scripts": {
+    "topup": "dfx wallet send ryjl3-tyaaa-aaaaa-aaaba-cai 20000000000000",
     "wasm": "node scripts/install.wasm.mjs",
     "build": "webpack",
     "prebuild": "npm run copy:types && npm run copy:mjs",
