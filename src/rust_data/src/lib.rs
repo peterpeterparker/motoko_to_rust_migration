@@ -8,15 +8,9 @@ use std::collections::HashMap;
 use candid::CandidType;
 use serde::Deserialize;
 
-// https://medium.com/encode-club/encode-x-internet-computer-intro-to-building-on-the-ic-in-rust-video-slides-b496d6baad08
-// https://github.com/hpeebles/rust-canister-demo/blob/master/todo/src/lib.rs
-
 thread_local! {
     static STATE: RefCell<State> = RefCell::default();
 }
-
-// TODO: https://forum.dfinity.org/t/init-arg-mandatory-in-state/16009/ ?
-// I would rather like to have a mandatory { owner: Principal } without having to assign a default value.
 
 #[init]
 fn init(user: String) {
