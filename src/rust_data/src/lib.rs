@@ -52,6 +52,8 @@ fn pre_upgrade() {
 
 #[post_upgrade]
 fn post_upgrade() {
+    // TODO: error Panicked at 'called `Result::unwrap()` on an `Err` value: "Custom(Cannot parse header 
+    // Issue: https://forum.dfinity.org/t/upgrade-canister-from-motoko-to-rust-with-stable-memory/    
     let (upgrade_state,): (UpgradeState,) = storage::stable_restore().unwrap();
 
     let assets: Assets = upgrade_state.entries.into_iter().collect();
