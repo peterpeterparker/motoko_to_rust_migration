@@ -1,0 +1,17 @@
+type DataBucket = 
+ service {
+   get: () -> (record {
+                 assets: vec record {
+                               text;
+                               Asset;
+                             };
+                 user: text;
+               }) query;
+   put: (text, text) -> ();
+ };
+type Asset = 
+ record {
+   key: text;
+   value: vec nat8;
+ };
+service : (record {user: text;}) -> DataBucket

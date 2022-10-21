@@ -5,10 +5,11 @@
   "keywords": ["Internet Computer", "Motoko", "JavaScript", "Canister"],
   "scripts": {
     "build": "webpack",
-    "prebuild": "npm run copy:types",
+    "prebuild": "npm run copy:types && npm run copy:mjs",
     "start": "webpack serve --mode development --env development",
-    "prestart": "npm run copy:types",
-    "copy:types": "rsync -avr .dfx/$(echo ${DFX_NETWORK:-'**'})/canisters/** --exclude='assets/' --exclude='idl/' --exclude='*.wasm' --exclude='*.most' --delete src/declarations"
+    "prestart": "npm run copy:types && npm run copy:mjs",
+    "copy:types": "rsync -avr .dfx/$(echo ${DFX_NETWORK:-'**'})/canisters/** --exclude='assets/' --exclude='idl/' --exclude='*.wasm' --exclude='*.most' --delete src/declarations",
+    "copy:mjs": "cp src/declarations/motoko_to_rust_migration_backend/motoko_to_rust_migration_backend.did.js src/declarations/motoko_to_rust_migration_backend/motoko_to_rust_migration_backend.did.mjs"
   },
   "devDependencies": {
     "@dfinity/agent": "0.14.0",
