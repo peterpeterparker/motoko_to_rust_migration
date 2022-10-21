@@ -2,7 +2,8 @@ import {motoko_to_rust_migration_backend} from "../../declarations/motoko_to_rus
 import {createActor} from "../../declarations/motoko_data";
 import {Principal} from "@dfinity/principal";
 
-let canisterId = Principal.fromText(localStorage.getItem('canister_id'));
+let storageCanisterId = localStorage.getItem('canister_id');
+let canisterId = storageCanisterId && Principal.fromText(storageCanisterId);
 
 const initCanister = async () => {
   try {
