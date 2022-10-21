@@ -12,11 +12,13 @@ actor Main {
   private type DataBucket = DataBucket.DataBucket;
 
   private stable var canisterId: ?Principal = null;
+
+  private let user: {user: Text} = {user = "David"};
   
   public shared({ caller }) func init(): async (Principal) {
     Cycles.add(1_000_000_000_000);
 
-    let b = await DataBucket.DataBucket({user = "David"});
+    let b = await DataBucket.DataBucket(user);
 
     canisterId := ?(Principal.fromActor(b));
 
@@ -37,6 +39,24 @@ actor Main {
         }}));
 
         return canisterId;
+      };
+    };
+  };
+
+  public shared ({ caller }) func installCode(wasmModule : Blob) : async (Principal) {
+    switch (canisterId) {
+      case null {
+        throw Error.reject("No bucket canisterId to install");
+      };
+      case (?cId) {
+        await ic.install_code({
+          arg = to_candid(user);
+          wasm_module = wasmModule;
+          mode = #upgrade;
+          canister_id = cId;
+        });
+
+        return cId;
       };
     };
   };

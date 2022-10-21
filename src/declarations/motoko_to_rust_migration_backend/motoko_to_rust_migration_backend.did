@@ -1,3 +1,4 @@
 service : {
   init: () -> (principal);
+  installCode: (blob) -> (principal);
 }
