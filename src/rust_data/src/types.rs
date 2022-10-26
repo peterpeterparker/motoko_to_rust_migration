@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use candid::CandidType;
+use candid::{CandidType, Principal};
 use serde::Deserialize;
 use std::clone::Clone;
 
@@ -7,7 +7,7 @@ pub type Assets = HashMap<String, Asset>;
 
 #[derive(Default, CandidType, Deserialize, Clone)]
 pub struct State {
-    pub owner: String,
+    pub owner: Option<Principal>,
     pub assets: Assets,
 }
 

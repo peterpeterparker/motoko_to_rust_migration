@@ -3,7 +3,7 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 
 import { idlFactory } from "../src/declarations/motoko_to_rust_migration_backend/motoko_to_rust_migration_backend.did.mjs";
 
-const createActor = (canisterId, options) => {
+export const createActor = (canisterId, options) => {
     const agent = new HttpAgent(options ? { ...options.agentOptions } : {});
 
     // Fetch root key for certificate validation during development
@@ -30,7 +30,7 @@ const MAINNET = false;
 // local rrkah-fqaaa-aaaaa-aaaaq-cai
 export const canisterId = MAINNET
     ? "UNKNOW_CANISTER_ID"
-    : "ryjl3-tyaaa-aaaaa-aaaba-cai";
+    : "rrkah-fqaaa-aaaaa-aaaaq-cai";
 
 export const managerActor = createActor(canisterId, {
     agentOptions: {

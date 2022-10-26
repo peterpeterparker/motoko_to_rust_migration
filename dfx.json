@@ -5,7 +5,7 @@
       "type": "motoko"
     },
     "motoko_data": {
-      "main": "src/motoko_data/data.mo",
+      "main": "src/motoko_data/storage.mo",
       "type": "motoko"
     },
     "rust_data": {

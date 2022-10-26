@@ -1,5 +1,5 @@
 import {motoko_to_rust_migration_backend} from "../../declarations/motoko_to_rust_migration_backend";
-import {createActor} from "../../declarations/rust_data";
+import {createActor} from "../../declarations/motoko_data";
 import {Principal} from "@dfinity/principal";
 
 let storageCanisterId = localStorage.getItem('canister_id');
@@ -20,6 +20,9 @@ const initCanister = async () => {
 const put = async () => {
   try {
     const actor = createActor(canisterId);
+
+    console.log(actor, canisterId)
+
     await actor.put("1", "hello");
     await actor.put("2", "world");
     console.log("Done put.");

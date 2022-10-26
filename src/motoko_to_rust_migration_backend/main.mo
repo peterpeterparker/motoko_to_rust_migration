@@ -4,21 +4,19 @@ import Error "mo:base/Error";
 
 import IC "./ic.types";
 
-import DataBucket "../motoko_data/data";
+import StorageBucket "../motoko_data/storage";
 
 actor Main {
   private let ic : IC.Self = actor "aaaaa-aa";
 
-  private type DataBucket = DataBucket.DataBucket;
+  private type StorageBucket = StorageBucket.StorageBucket;
 
   private stable var canisterId: ?Principal = null;
-
-  private let user: {user: Text} = {user = "David"};
   
   public shared({ caller }) func init(): async (Principal) {
     Cycles.add(1_000_000_000_000);
 
-    let b = await DataBucket.DataBucket(user);
+    let b = await StorageBucket.StorageBucket(caller);
 
     canisterId := ?(Principal.fromActor(b));
 
@@ -50,7 +48,7 @@ actor Main {
       };
       case (?cId) {
         await ic.install_code({
-          arg = to_candid(user);
+          arg = to_candid(caller);
           wasm_module = wasmModule;
           mode = #upgrade;
           canister_id = cId;

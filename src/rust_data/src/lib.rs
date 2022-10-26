@@ -5,7 +5,7 @@ use ic_cdk::{ storage, print, api };
 use ic_cdk_macros::{ init, query, update, pre_upgrade, post_upgrade };
 use std::cell::RefCell;
 use std::collections::HashMap;
-use candid::{CandidType, decode_args};
+use candid::{CandidType, decode_args, Principal};
 use serde::Deserialize;
 
 thread_local! {
@@ -13,8 +13,8 @@ thread_local! {
 }
 
 #[init]
-fn init(user: String) {
-    print(format!("Initializing bucket., {}", user));
+fn init(user: Option<Principal>) {
+    print(format!("Initializing bucket., {}", user.unwrap()));
     STATE.with(|state| {
         *state.borrow_mut() = State {
             owner: user,
@@ -25,13 +25,8 @@ fn init(user: String) {
 
 #[derive(CandidType, Deserialize)]
 struct UpgradeState {
-    pub user: Option<UpgradeUser>,
+    pub user: Option<Principal>,
     pub entries: Option<Vec<(String, Asset)>>,
-}
-
-#[derive(CandidType, Deserialize)]
-struct UpgradeUser {
-    user: String,
 }
 
 #[pre_upgrade]
@@ -93,11 +88,11 @@ fn post_upgrade() {
     // api::stable::stable_read(std::mem::size_of::<u32>() as u32, vec.as_mut_slice());
 
     let (upgrade_state,): (UpgradeState,) = decode_args(&buf).unwrap();
-    
-    let assets: Assets = upgrade_state.entries.unwrap().into_iter().collect();
+
+    let assets: Assets = upgrade_assets(upgrade_state.entries);
 
     let new_state: State = State {
-        owner: upgrade_state.user.unwrap().user,
+        owner: upgrade_state.user,
         assets,
     };
 
@@ -106,27 +101,21 @@ fn post_upgrade() {
     });
 }
 
+fn upgrade_assets(entries: Option<Vec<(String, Asset)>>) -> Assets {
+    match entries {
+        None => {
+            print(format!("Hashmap is empty."));
+            HashMap::new()
+        },
+        Some(e) => {
+            print(format!("Hashmap is YOLo., {}", e.len()));
+            e.into_iter().collect()
+        }
+    }
+}
+
 // From dfn_candid https://github.com/dfinity/ic/blob/89446f5a04f053040b4863eab5458446d925ed0e/rs/rust_canisters/dfn_candid/src/lib.rs
 // fn from_bytes(bytes: Vec<u8>) -> Result<(Vec<u8>, Vec<u8>), String> {
 //    let res = decode_args(&bytes).map_err(|e| e.to_string())?;
 //    Ok(res)
 // }
-
-#[query]
-fn get() -> State {
-    // TODO: redundant, same as in pre_upgrade
-    let owner: String = STATE.with(|state| get_owner(&state.borrow()));
-    let assets: Assets = STATE.with(|state| get_assets(&state.borrow()));
-
-    let state: State = State { owner, assets };
-
-    state
-}
-
-fn get_owner(state: &State) -> String {
-    state.owner.to_string()
-}
-
-fn get_assets(state: &State) -> Assets {
-    state.assets.clone()
-}
