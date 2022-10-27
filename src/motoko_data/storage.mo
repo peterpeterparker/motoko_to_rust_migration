@@ -5,6 +5,7 @@ import Iter "mo:base/Iter";
 import Error "mo:base/Error";
 import Blob "mo:base/Blob";
 import Principal "mo:base/Principal";
+import Time "mo:base/Time";
 
 import Result "mo:base/Result";
 
@@ -39,7 +40,91 @@ actor class StorageBucket(owner : Types.UserId) = this {
   private stable let user : Types.UserId = owner;
 
   // Preserve the application state on upgrades
-  private stable var entries : [(Text, Asset)] = [];
+  private var entries : [(Text, Asset)] = [];
+
+  private stable var test: Nat = 99;
+
+
+
+ let key: AssetKey = {
+        name = "a";
+        folder = "b";
+       fullPath = "c";
+        token = null;
+        sha256 = null;
+      };
+
+      let headers: [(Text, Text)] = [];
+
+      let encoding: AssetEncoding = {
+        modified = Time.now();
+            contentChunks = [[3]];
+            totalLength = 1;
+      };
+
+
+  private var entriesTest : [(Text, Asset)] = [("test-yolo-123", {
+      key;
+      headers;
+      encoding;
+    })];
+
+    private type Asset2 = {
+        key : Text;
+        value: [Nat8];
+    };
+
+    private stable var test45678: [Asset2] = [{
+      key = "key";
+      value = Blob.toArray(Text.encodeUtf8("123"));
+    }];
+
+
+    private stable var test456789: [(Text, Asset2)] = [("yolo", {
+      key = "key";
+      value = Blob.toArray(Text.encodeUtf8("1234"));
+    })];
+
+    private type Asset3 = {
+        key : AssetKey;
+        value: [Nat8];
+    };
+
+    private stable var test4567890: [(Text, Asset3)] = [("yolo", {
+      key = key;
+      value = Blob.toArray(Text.encodeUtf8("1234"));
+    })];
+
+    private type Asset4 = {
+        key : AssetKey;
+        headers : [(Text, Text)];
+        value: [Nat8];
+    };
+
+    private stable var test45678901: [(Text, Asset4)] = [("yolo", {
+      key = key;
+      headers;
+      value = Blob.toArray(Text.encodeUtf8("1234"));
+    })];
+
+    type AssetEncodingShort = {
+        contentChunks: [[Nat8]];
+      };
+
+    private type Asset5 = {
+        key : AssetKey;
+        headers : [(Text, Text)];
+        modified : Int;
+        contentChunks: [[Nat8]];
+    };
+
+    private stable var test45678901234567: [(Text, Asset5)] = [("yolo", {
+      key = key;
+      headers;
+      modified = Time.now();
+      contentChunks = [Blob.toArray(Text.encodeUtf8("1234"))];
+    })];
+
 
   let storageStore : StorageStore.StorageStore = StorageStore.StorageStore();
 
@@ -258,6 +343,8 @@ actor class StorageBucket(owner : Types.UserId) = this {
 
   system func preupgrade() {
     entries := Iter.toArray(storageStore.preupgrade().entries());
+
+   
   };
 
   system func postupgrade() {

@@ -69,14 +69,14 @@ const uploadAssets = async () => {
       fullPath: "/d/post1234",
       mimeType: "text/html"
     }),
-    uploadHtml({
-      src: "./data/sample_1920x1280.png",
-      name: "sample_1920x1280.png",
-      folder: "images",
-      fullPath: "/images/sample_1920x1280.png",
-      token: "123",
-      mimeType: "image/jpeg"
-    }),
+    // uploadHtml({
+    //   src: "./data/sample_1920x1280.png",
+    //   name: "sample_1920x1280.png",
+    //   folder: "images",
+    //   fullPath: "/images/sample_1920x1280.png",
+    //   token: "123",
+    //   mimeType: "image/jpeg"
+    // }),
   ]);
 };
 

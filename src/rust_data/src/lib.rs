@@ -1,12 +1,13 @@
 mod types;
 
-use crate::types::{ Assets, State, Asset };
 use ic_cdk::{ storage, print, api };
 use ic_cdk_macros::{ init, query, update, pre_upgrade, post_upgrade };
 use std::cell::RefCell;
 use std::collections::HashMap;
 use candid::{CandidType, decode_args, Principal};
 use serde::Deserialize;
+use crate::types::{interface::{InitUpload, UploadChunk, CommitBatch, Del}, storage::{AssetKey, State, Chunk, Asset, AssetEncoding, StableState, RuntimeState}, http::{HttpRequest, HttpResponse, HeaderField, StreamingStrategy, StreamingCallbackToken, StreamingCallbackHttpResponse}};
+use crate::types::{storage::{Assets}, migration::{UpgradeState}};
 
 thread_local! {
     static STATE: RefCell<State> = RefCell::default();
@@ -17,16 +18,16 @@ fn init(user: Option<Principal>) {
     print(format!("Initializing bucket., {}", user.unwrap()));
     STATE.with(|state| {
         *state.borrow_mut() = State {
-            owner: user,
-            assets: HashMap::new(),
+            stable: StableState {
+                user,
+                assets: HashMap::new(),
+            },
+            runtime: RuntimeState {
+                chunks: HashMap::new(),
+                batches: HashMap::new(),
+            },
         };
     });
-}
-
-#[derive(CandidType, Deserialize)]
-struct UpgradeState {
-    pub user: Option<Principal>,
-    pub entries: Option<Vec<(String, Asset)>>,
 }
 
 #[pre_upgrade]
@@ -89,16 +90,24 @@ fn post_upgrade() {
 
     let (upgrade_state,): (UpgradeState,) = decode_args(&buf).unwrap();
 
-    let assets: Assets = upgrade_assets(upgrade_state.entries);
+    let serialized_state = serde_json::to_string(&upgrade_state).unwrap();
+    print(format!("upgrade_state. {}", serialized_state));
 
-    let new_state: State = State {
-        owner: upgrade_state.user,
-        assets,
-    };
-
-    STATE.with(|state| {
-        *state.borrow_mut() = new_state;
-    });
+    // let assets: Assets = upgrade_assets(upgrade_state.entries);
+    //
+    // let stable: StableState = StableState {
+    //     user: upgrade_state.user,
+    //     assets,
+    // };
+    //
+    // // Populate state
+    // STATE.with(|state| *state.borrow_mut() = State {
+    //     stable,
+    //     runtime: RuntimeState {
+    //         chunks: HashMap::new(),
+    //         batches: HashMap::new(),
+    //     },
+    // });
 }
 
 fn upgrade_assets(entries: Option<Vec<(String, Asset)>>) -> Assets {

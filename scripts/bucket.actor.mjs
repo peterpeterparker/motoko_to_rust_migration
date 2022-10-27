@@ -8,7 +8,7 @@ const MAINNET = false;
 // local rrkah-fqaaa-aaaaa-aaaaq-cai
 export const canisterId = MAINNET
   ? "UNKNOW_CANISTER_ID"
-  : "qaa6y-5yaaa-aaaaa-aaafa-cai";
+  : "vh6yy-miaaa-aaaaa-aaaya-cai";
 
 export const bucketActor = createActor({
   canisterId,
